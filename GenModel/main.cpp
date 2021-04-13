@@ -2,6 +2,7 @@
 #include <QString>
 #include <QStringList>
 #include "preprocess.h"
+#include "interpolation.h"
 
 using namespace std;
 
@@ -63,25 +64,13 @@ int GenSVMmodel(){
 
 int main()
 {
-    preprocess pp;
-    vector<vector<string>> csvdata;
-    pp.ReadCSVfile("/mnt/hgfs/linuxsharefiles/txtfiles/measureDistance_7_383.csv",csvdata);
-    vector<vector<float>> stddata;
-    vector<string> stdname;
-    pp.ReadTxttoString("/mnt/hgfs/linuxsharefiles/txtfiles/45.txt",stdname);
-    pp.ReadTxttoVec("/mnt/hgfs/linuxsharefiles/txtfiles/b1.txt",stddata);
-    ofstream outfile("out.txt",ios::app); //ios::app指追加写入
-    for(int i=0;i<stdname.size();++i){
-        vector<float> datavec0;
-        vector<float> datavec2;
-        string name=stdname[i].substr(0,stdname[i].size()-1);
-        pp.GetColdata(csvdata,datavec0,2,3,name);
-        pp.GetColstddata(stddata,datavec2,i);
-        float c1=pp.getoptimaloffset(datavec0,datavec2,30,-30);
-        string temp=std::to_string(c1);
-        outfile<<temp;//写文件
-        outfile<<endl;
-    }
-    outfile.close();
+    interpolation ip;
+    cv::Mat srcimg=cv::imread("/mnt/hgfs/linuxsharefiles/small144.jpg",0);
+    cv::imshow("src",srcimg);
+    cv::Mat dstimg;
+    float rad=30.0/180.0*CV_PI;
+    ip.imageRotationbcl(srcimg,dstimg,rad);
+    cv::imshow("dst",dstimg);
+    cv::waitKey(0);
     return 0;
 }

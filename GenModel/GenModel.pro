@@ -79,7 +79,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 
 SOURCES += main.cpp \
-    preprocess.cpp
+    preprocess.cpp \
+    interpolation.cpp
 
 HEADERS += \
-    preprocess.h
+    preprocess.h \
+    interpolation.h
